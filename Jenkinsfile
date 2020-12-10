@@ -7,7 +7,7 @@ pipeline {
  stage('Tests unitaires') {
 
  steps {
- sh 'mvn test'
+ sh 'composer test-all'
  }
 
  }
