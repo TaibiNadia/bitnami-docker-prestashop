@@ -1,0 +1,14 @@
+pipeline {
+ agent {
+ label 'agent_java'
+ }
+ stages {
+
+ stage('Tests unitaires') {
+
+ steps {
+ sh 'mvn test'
+ }
+
+ }
+}
