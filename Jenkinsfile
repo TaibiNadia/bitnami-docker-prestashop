@@ -1,7 +1,7 @@
 pipeline {
  
   agent {
-    label 'slave_docker'
+    label 'presta_docker_slave'
   }
  
   stages {
