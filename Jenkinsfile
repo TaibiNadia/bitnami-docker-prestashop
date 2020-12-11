@@ -1,6 +1,6 @@
 pipeline {
  agent {
- label 'bitnami/prestashop'
+ label 'slave_docker'
  }
  stages {
 
