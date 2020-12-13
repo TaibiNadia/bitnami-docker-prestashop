@@ -9,6 +9,7 @@ pipeline {
     stage('Tests unitaires') {
 
       steps {
+        sh 'composer install'
         sh 'composer test-all'
       }
     }
