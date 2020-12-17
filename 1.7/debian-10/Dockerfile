@@ -61,6 +61,10 @@ ENV JENKINS_AGENT_HOME ${JENKINS_AGENT_HOME}
 RUN groupadd -g ${gid} ${group} \
     && useradd -d "${JENKINS_AGENT_HOME}" -u "${uid}" -g "${gid}" -m -s /bin/bash "${user}"
 
+# Add the jenkins user to sudoers
+RUN echo "jenkins  ALL=(ALL)  ALL" >> etc/sudoers
+
+
 # Setup SSH server
 RUN apt-get update \
     && apt-get install --no-install-recommends -y openssh-server \
