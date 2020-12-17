@@ -6,7 +6,7 @@ pipeline {
  
   stages {
 
-    stage('Tests unitaires') {
+    stage('Tests_unitaires') {
 
       steps {
         sh 'composer install'
