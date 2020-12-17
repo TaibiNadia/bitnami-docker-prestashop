@@ -16,6 +16,7 @@ RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "libphp" "7.2.34-
 RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "render-template" "1.0.0-3" --checksum 8179ad1371c9a7d897fe3b1bf53bbe763f94edafef19acad2498dd48b3674efe
 RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "prestashop" "1.7.6-9-0" --checksum 8d89d079f468f9b21f3ad7e31e7192268a2f555b77295af7a448a60ac44f5598
 RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "gosu" "1.12.0-2" --checksum 4d858ac600c38af8de454c27b7f65c0074ec3069880cb16d259a6e40a46bbc50
+RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "java" "1.8.242-0" --checksum 3a70f3d1c3cd9bc6ec581b2a10373a2b323c0b9af40402ce8d19aeb0b3d02400
 RUN apt-get update && apt-get upgrade -y && \
     rm -r /var/lib/apt/lists /var/cache/apt/archives
 RUN chmod g+rwX /opt/bitnami
@@ -45,46 +46,18 @@ ENV ALLOW_EMPTY_PASSWORD="no" \
     PATH="/opt/bitnami/php/bin:/opt/bitnami/php/sbin:/opt/bitnami/apache/bin:/opt/bitnami/mysql/bin:/opt/bitnami/common/bin:/opt/bitnami/prestashop/bin:$PATH"
 
 # Debut
-# Install jdl8
-RUN apt -y update
-RUN apt install -y openjdk-8-jdk
-
-# Add user jenkins
-ARG user=jenkins
-ARG group=jenkins
-ARG uid=1000
-ARG gid=1000
-ARG JENKINS_AGENT_HOME=/home/${user}
-
-ENV JENKINS_AGENT_HOME ${JENKINS_AGENT_HOME}
-
-RUN groupadd -g ${gid} ${group} \
-    && useradd -d "${JENKINS_AGENT_HOME}" -u "${uid}" -g "${gid}" -m -s /bin/bash "${user}"
-
-# Add the jenkins user to sudoers
-RUN echo "jenkins  ALL=(ALL)  ALL" >> etc/sudoers
-
-
 # Setup SSH server
-RUN apt-get update \
-    && apt-get install --no-install-recommends -y openssh-server \
-    && rm -rf /var/lib/apt/lists/*
-RUN sed -i /etc/ssh/sshd_config \
-        -e 's/#PermitRootLogin.*/PermitRootLogin no/' \
-        -e 's/#RSAAuthentication.*/RSAAuthentication yes/'  \
-        -e 's/#PasswordAuthentication.*/PasswordAuthentication no/' \
-        -e 's/#SyslogFacility.*/SyslogFacility AUTH/' \
-        -e 's/#LogLevel.*/LogLevel INFO/' && \
-    mkdir /var/run/sshd
+RUN apt update && apt install  openssh-server sudo -y
 
-VOLUME "${JENKINS_AGENT_HOME}" "/tmp" "/run" "/var/run"
-WORKDIR "${JENKINS_AGENT_HOME}"
+RUN useradd -rm -d /home/jenkins -s /bin/bash -g root -G sudo -u 1000 jenkins
 
-COPY setup-sshd /usr/local/bin/setup-sshd
+RUN  echo 'jenkins:jenkins' | chpasswd
+
+RUN service ssh start
 
 EXPOSE 22
 
-ENTRYPOINT ["setup-sshd"]
+CMD ["/usr/sbin/sshd","-D"]
 # Fin
 
 EXPOSE 8080 8443
