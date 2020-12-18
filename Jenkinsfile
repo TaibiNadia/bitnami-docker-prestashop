@@ -1,12 +1,12 @@
 pipeline {
  
   agent {
-    label 'docker_slave'
+    label 'docker_agent'
   }
  
   stages {
 
-    stage('Tests_unitaires') {
+    stage('Tests unitaires') {
 
       steps {
         sh 'composer install'
