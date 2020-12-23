@@ -1,5 +1,7 @@
 pipeline {
-  agent { dockerfile true }
+  agent {
+      docker { image 'docker.io/bitnami/prestashop:1.7-debian-10' }
+  }
   stages {
 
       stage('Tests unitaires') {
