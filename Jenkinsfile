@@ -1,13 +1,8 @@
 pipeline {
- 
-  agent none
- 
   stages {
 
       stage('Tests unitaires') {
-       agent {
-          label 'prestashop_agent'
-      }
+      agent { dockerfile true }
      
       steps {
         sh 'composer install'
