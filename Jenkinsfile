@@ -1,7 +1,7 @@
 pipeline {
  
   agent {
-    label 'docker_agent'
+    label 'prestashop_agent'
   }
  
   stages {
