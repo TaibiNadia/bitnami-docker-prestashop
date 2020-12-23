@@ -1,8 +1,8 @@
 pipeline {
+  agent { dockerfile true }
   stages {
 
       stage('Tests unitaires') {
-      agent { dockerfile true }
      
       steps {
         sh 'composer install'
