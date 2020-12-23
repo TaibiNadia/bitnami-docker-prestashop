@@ -13,5 +13,14 @@ pipeline {
         sh 'composer test-all'
       }
     }
+
+    stage('build') {
+
+      steps {
+        sh ''
+     }
+
+   }
+
   }
 }
